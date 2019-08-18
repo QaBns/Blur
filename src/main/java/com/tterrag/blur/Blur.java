@@ -114,18 +114,19 @@ public class Blur {
     }
     
     @SubscribeEvent
-    public void onGuiChange(GuiOpenEvent event) throws JsonException {
+    public void onGuiChange(GuiOpenEvent event) throws JsonException{
         if (_listShaders == null) {
             _listShaders = ReflectionHelper.findField(ShaderGroup.class, "field_148031_d", "listShaders");
         }
-        if (Minecraft.getMinecraft().theWorld != null && ShaderLinkHelper.getStaticShaderLinkHelper() != null) {
+        if (Minecraft.getMinecraft().theWorld != null) {
             EntityRenderer er = Minecraft.getMinecraft().entityRenderer;
-            if (!er.isShaderActive() && event.gui != null && !ArrayUtils.contains(blurExclusions, event.gui.getClass().getName())) {
+			boolean excluded = event.gui != null && !ArrayUtils.contains(blurExclusions, event.gui.getClass().getName());
+			if (!er.isShaderActive() && !excluded) {
                 Minecraft mc = Minecraft.getMinecraft();
                 er.theShaderGroup = new ShaderGroup(mc.getTextureManager(), mc.getResourceManager(), mc.getFramebuffer(), new ResourceLocation("shaders/post/fade_in_blur.json"));
                 er.updateShaderGroupSize(mc.displayWidth, mc.displayHeight);
                 start = System.currentTimeMillis();
-            } else if (er.isShaderActive() && event.gui == null) {
+            } else if (er.isShaderActive() && excluded) {
                 er.deactivateShader();
             }
         }
