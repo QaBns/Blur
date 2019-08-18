@@ -64,7 +64,10 @@ public class ShaderResourcePack implements IResourcePack, IResourceManagerReload
 
     @Override
 	public IMetadataSection getPackMetadata(IMetadataSerializer metadataSerializer, String metadataSectionName) throws IOException {
-	    return new PackMetadataSection(new ChatComponentText("Blur's default shaders"), 3);
+	    if("pack".equals(metadataSectionName)){
+			return new PackMetadataSection(new ChatComponentText("Blur's default shaders"), 3);
+		}
+		return null;
     }
 
 	@Override
