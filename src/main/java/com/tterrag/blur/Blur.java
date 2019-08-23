@@ -120,12 +120,13 @@ public class Blur {
         }
         if (Minecraft.getMinecraft().theWorld != null && ShaderLinkHelper.getStaticShaderLinkHelper() != null) {
             EntityRenderer er = Minecraft.getMinecraft().entityRenderer;
-            if (!er.isShaderActive() && event.gui != null && !ArrayUtils.contains(blurExclusions, event.gui.getClass().getName())) {
+			boolean excluded = event.gui == null || ArrayUtils.contains(blurExclusions, event.gui.getClass().getName());
+            if (!er.isShaderActive() && !excluded){
                 Minecraft mc = Minecraft.getMinecraft();
                 er.theShaderGroup = new ShaderGroup(mc.getTextureManager(), mc.getResourceManager(), mc.getFramebuffer(), new ResourceLocation("shaders/post/fade_in_blur.json"));
                 er.updateShaderGroupSize(mc.displayWidth, mc.displayHeight);
                 start = System.currentTimeMillis();
-            } else if (er.isShaderActive() && event.gui == null) {
+            } else if (er.isShaderActive() && excluded) {
                 er.deactivateShader();
             }
         }
